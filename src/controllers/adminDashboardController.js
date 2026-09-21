@@ -9,6 +9,23 @@ const getDashboardStats = async (req, res) => {
       role: "user",
     });
 
+
+    
+    const startOfToday = new Date();
+    startOfToday.setHours(0, 0, 0, 0);
+
+    const endOfToday = new Date();
+    endOfToday.setHours(23, 59, 59, 999);
+
+    const dailyActiveUsers = await User.countDocuments({
+    role: "user",
+    lastActiveAt: {
+    $gte: startOfToday,
+    $lte: endOfToday,
+  },
+ });
+
+
     const users = await User.find({
       role: "user",
     }).select("likedCodes savedCodes");
@@ -83,6 +100,7 @@ const getDashboardStats = async (req, res) => {
       stats: {
         totalCodes,
         totalUsers,
+        dailyActiveUsers,
         totalLikes,
         totalSaves,
       },

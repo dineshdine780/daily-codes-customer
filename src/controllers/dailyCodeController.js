@@ -1,22 +1,30 @@
+
 const DailyCode = require("../models/DailyCode");
 const User = require("../models/User");
+
 // Create daily code
 const createDailyCode = async (req, res) => {
   try {
-    const { title, message, category, author } = req.body;
+    const {
+      text,
+      category,
+      author,
+      status,
+    } = req.body;
 
-    if (!title || !message || !category) {
+    if (!text || !category) {
       return res.status(400).json({
         success: false,
-        message: "Title, message and category are required",
+        message: "Code text and category are required",
       });
     }
 
     const dailyCode = await DailyCode.create({
-      title,
-      message,
+      title: "Daily Wisdom",
+      message: text,
       category,
-      author,
+      author: author || "Daily Codes",
+      status: status || "Draft",
     });
 
     res.status(201).json({
@@ -25,7 +33,10 @@ const createDailyCode = async (req, res) => {
       dailyCode,
     });
   } catch (error) {
-    console.error("Create daily code error:", error.message);
+    console.error(
+      "Create daily code error:",
+      error.message
+    );
 
     res.status(500).json({
       success: false,
@@ -47,7 +58,10 @@ const getDailyCodes = async (req, res) => {
       dailyCodes,
     });
   } catch (error) {
-    console.error("Get daily codes error:", error.message);
+    console.error(
+      "Get daily codes error:",
+      error.message
+    );
 
     res.status(500).json({
       success: false,
@@ -56,7 +70,103 @@ const getDailyCodes = async (req, res) => {
   }
 };
 
+
+// Update daily code
+const updateDailyCode = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      text,
+      message,
+      category,
+      author,
+      status,
+    } = req.body;
+
+    const dailyCode = await DailyCode.findById(id);
+
+    if (!dailyCode) {
+      return res.status(404).json({
+        success: false,
+        message: "Daily code not found",
+      });
+    }
+
+    // Update only provided fields
+    if (text !== undefined) {
+      dailyCode.message = text;
+    } else if (message !== undefined) {
+      dailyCode.message = message;
+    }
+
+    if (category !== undefined) {
+      dailyCode.category = category;
+    }
+
+    if (author !== undefined) {
+      dailyCode.author = author;
+    }
+
+    if (status !== undefined) {
+      dailyCode.status = status;
+    }
+
+    await dailyCode.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Daily code updated successfully",
+      dailyCode,
+    });
+  } catch (error) {
+    console.error(
+      "Update daily code error:",
+      error.message
+    );
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to update daily code",
+    });
+  }
+};
+
+
+// Delete daily code
+const deleteDailyCode = async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    const dailyCode = await DailyCode.findByIdAndDelete(id);
+
+    if (!dailyCode) {
+      return res.status(404).json({
+        success: false,
+        message: "Daily code not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Daily code deleted successfully",
+    });
+  } catch (error) {
+    console.error(
+      "Delete daily code error:",
+      error.message
+    );
+
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete daily code",
+    });
+  }
+};
+
+
 module.exports = {
   createDailyCode,
   getDailyCodes,
+  updateDailyCode,
+  deleteDailyCode,
 };

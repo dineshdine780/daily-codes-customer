@@ -1,3 +1,4 @@
+
 const mongoose = require("mongoose");
 
 const dailyCodeSchema = new mongoose.Schema(
@@ -12,6 +13,7 @@ const dailyCodeSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
+      maxlength: 280,
     },
 
     category: {
@@ -26,6 +28,12 @@ const dailyCodeSchema = new mongoose.Schema(
       trim: true,
     },
 
+    status: {
+      type: String,
+      enum: ["Draft", "Published"],
+      default: "Draft",
+    },
+
     date: {
       type: Date,
       default: Date.now,
@@ -36,4 +44,7 @@ const dailyCodeSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model("DailyCode", dailyCodeSchema);
+module.exports = mongoose.model(
+  "DailyCode",
+  dailyCodeSchema
+);
