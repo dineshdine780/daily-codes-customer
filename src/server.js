@@ -12,6 +12,8 @@ const savedCodeRoutes = require("./routes/savedCodeRoutes");
 const likedCodeRoutes = require("./routes/likedCodeRoutes");
 const adminDashboardRoutes = require("./routes/adminDashboardRoutes");
 const categoryRoutes = require("./routes/categoryRoutes");
+const userRoutes = require("./routes/userRoutes");
+
 
 connectDB();
 
@@ -36,6 +38,8 @@ app.use("/api/saved-codes", savedCodeRoutes);
 app.use("/api/liked-codes", likedCodeRoutes);
 app.use("/api/admin/dashboard", adminDashboardRoutes);
 app.use("/api/categories", categoryRoutes);
+app.use("/api/users", userRoutes);
+
 
 app.get("/", (req, res) => {
   res.json({

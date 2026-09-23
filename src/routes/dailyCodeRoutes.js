@@ -8,15 +8,18 @@ const {
 } = require("../controllers/dailyCodeController");
 
 const authMiddleware = require("../middleware/authMiddleware");
+const adminMiddleware = require("../middleware/adminMiddleware");
 
 const router = express.Router();
 
-router.post("/", authMiddleware, createDailyCode);
+// Admin-only routes
+router.post("/", adminMiddleware, createDailyCode);
+
+router.put("/:id", adminMiddleware, updateDailyCode);
+
+router.delete("/:id", adminMiddleware, deleteDailyCode);
+
 
 router.get("/", authMiddleware, getDailyCodes);
-
-router.put("/:id", authMiddleware, updateDailyCode);
-
-router.delete("/:id", authMiddleware, deleteDailyCode);
 
 module.exports = router;
