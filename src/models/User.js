@@ -28,6 +28,11 @@ const userSchema = new mongoose.Schema(
       default: "user",
     },
 
+    profileImage: {
+      type: String,
+      default: "",
+    },
+
     lastActiveAt: {
       type: Date,
       default: null,
